@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nextage Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #1a1a2e; color: #e2e8f0; }
+        .panel { background-color: #16213e; border: 1px solid #0f3460; }
+        .blink { animation: blinker 1.5s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+    </style>
+</head>
+<body class="p-6 font-sans antialiased">
+
+    <!-- HEADER PRINCIPAL DO SISTEMA (FIXO NO TOPO) -->
+    <header class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center border-b border-gray-700 pb-4 mb-6 gap-4">
+        <!-- TÍTULO DO SISTEMA -->
+        <div>
+            <h1 class="text-3xl font-extrabold tracking-wider bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+                NEXTAGE SHOP
+            </h1>
+            <p class="text-xs text-gray-400 mt-0.5">Gerenciador de Jogos & Sistema de Créditos</p>
+        </div>
+
+        <!-- SEÇÃO DO USUÁRIO + FOTO (SÓ APARECE APÓS LOGIN) -->
+        <div id="user-header" class="hidden flex items-center gap-4 bg-gray-900/40 px-4 py-2 rounded-xl border border-gray-800">
+            <div class="text-right">
+                <div class="flex items-center gap-2 justify-end">
+                    <span id="user-badge" class="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-blue-600 text-white">User</span>
+                    <span id="header-username" class="font-semibold text-sm text-white">Nome</span>
+                </div>
+                <p class="text-xs text-emerald-400 font-bold mt-0.5" id="header-saldo">R$ 0,00</p>
+            </div>
+            
+            <!-- CONTÊINER DA SUA FOTO DE PERFIL -->
+            <div class="w-10 h-10 rounded-full border-2 border-purple-500 overflow-hidden bg-gray-800 flex items-center justify-center shadow-lg">
+                <img id="user-avatar" src="8e932ac5-3128-4ed4-9912-4f856bac47bf.webp" alt="Avatar" class="w-full h-full object-cover">
+            </div>
+
+            <button onclick="logout()" class="bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition border border-red-500/30 flex items-center gap-1">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+        </div>
+    </header>
+
+    <!-- ÁREA DE CONTEÚDO PRINCIPAL (CENTRALIZADA) -->
+    <main class="max-w-4xl mx-auto panel p-6 rounded-2xl shadow-2xl relative min-h-[450px] flex flex-col justify-center">
+        
+        <div id="screen-container" class="w-full">
+            
+            <!-- PASSO 1: CRIAR PRIMEIRO USUÁRIO (Mestre) -->
+            <div id="screen-setup" class="space-y-4 max-w-md mx-auto w-full">
+                <h3 class="text-xl font-bold text-center text-white"><i class="fas fa-shield-alt text-yellow-500 mr-2"></i>Primeiro Acesso</h3>
+                <p class="text-xs text-gray-400 text-center">Nenhum usuário encontrado no banco de dados. Digite a senha mestra para começar.</p>
+                <div>
+                    <input type="password" id="setup-master" placeholder="Digite a senha mestra" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500 text-center tracking-widest">
+                </div>
+                <button onclick="verificarSenhaMestra()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 rounded-lg text-sm transition">
+                    Validar Sistema
+                </button>
+            </div>
+
+            <!-- PASSO 1.5: CADASTRO DO ADMIN -->
+            <div id="screen-register-admin" class="hidden space-y-4 max-w-md mx-auto w-full">
+                <h3 class="text-xl font-bold text-center text-white">Definir Conta Administradora</h3>
+                <div class="space-y-2">
+                    <input type="text" id="reg-admin-login" placeholder="Escolha um Login" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 text-sm text-white">
+                    <input type="password" id="reg-admin-senha" placeholder="Escolha uma Senha" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 text-sm text-white">
+                </div>
+                <button onclick="salvarPrimeiroAdmin()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 rounded-lg text-sm transition">
+                    Criar Admin no Banco de Dados
+                </button>
+            </div>
+
+            <!-- PASSO 2: LOGIN -->
+            <div id="screen-login" class="hidden space-y-4 max-w-md mx-auto w-full">
+                <h3 class="text-xl font-bold text-center text-white"><i class="fas fa-lock mr-2 text-cyan-400"></i>Acessar sua Conta</h3>
+                <div class="space-y-2">
+                    <input type="text" id="login-user" placeholder="Usuário" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 text-sm text-white">
+                    <input type="password" id="login-pass" placeholder="Senha" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 text-sm text-white">
+                </div>
+                <button onclick="tentarLogin()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-lg text-sm transition">
+                    Entrar
+                </button>
+            </div>
+
+            <!-- PASSO 3: DASHBOARD PRINCIPAL -->
+            <div id="screen-dashboard" class="hidden space-y-6">
+                <!-- Menu de Ações Superior Interno -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2" id="menu-actions">
+                    <!-- Botões injetados dinamicamente via JS -->
+                </div>
+
+                <!-- Painel de Exibição Dinâmico -->
+                <div id="action-area" class="bg-gray-950/40 border border-gray-800/80 rounded-xl p-5 min-h-[250px]">
+                    <!-- Telas renderizadas dinamicamente -->
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Banco Fictício Local
+        let db_usuarios = [];
+        let db_produtos = [
+            { pro_id: 1, pro_nome: "Cyberpunk 2077", prod_desc: "RPG de ação futurista em Night City.", prod_preco: 199.90, qntd_estoque: 4 },
+            { pro_id: 2, pro_nome: "Elden Ring", prod_desc: "Desafio extremo nas Terras Intermédias.", prod_preco: 249.00, qntd_estoque: 2 },
+            { pro_id: 3, pro_nome: "Stardew Valley", prod_desc: "Gerencie sua fazenda pacífica.", prod_preco: 29.99, qntd_estoque: 9 }
+        ];
+        let db_bibliotecas = []; 
+        let usuarioLogado = null;
+        let jogoRodandoInterval = null;
+
+        // Fluxo Inicial de Segurança
+        function verificarSenhaMestra() {
+            const senha = document.getElementById('setup-master').value;
+            if (senha === "Un1f3c@f") {
+                document.getElementById('screen-setup').classList.add('hidden');
+                document.getElementById('screen-register-admin').classList.remove('hidden');
+            } else {
+                alert("Senha Mestra incorreta!");
+            }
+        }
+
+        function salvarPrimeiroAdmin() {
+            const login = document.getElementById('reg-admin-login').value.trim();
+            const senha = document.getElementById('reg-admin-senha').value.trim();
+            if(!login || !senha) return alert("Preencha todos os campos!");
+
+            db_usuarios.push({ id: 1, login, senha, admin: true, dinheiro: 1000.00 });
+            
+            document.getElementById('screen-register-admin').classList.add('hidden');
+            document.getElementById('screen-login').classList.remove('hidden');
+        }
+
+        function tentarLogin() {
+            const login = document.getElementById('login-user').value.trim();
+            const senha = document.getElementById('login-pass').value.trim();
+            const user = db_usuarios.find(u => u.login === login && u.senha === senha);
+
+            if (user) {
+                usuarioLogado = user;
+                carregarDashboard();
+            } else {
+                alert("Usuário ou senha incorretos!");
+            }
+        }
+
+        function carregarDashboard() {
+            document.getElementById('screen-login').classList.add('hidden');
+            document.getElementById('user-header').classList.remove('hidden');
+            document.getElementById('screen-dashboard').classList.remove('hidden');
+
+            document.getElementById('header-username').innerText = usuarioLogado.login;
+            document.getElementById('header-saldo').innerText = `R$ ${usuarioLogado.dinheiro.toFixed(2)}`;
+            
+            const badge = document.getElementById('user-badge');
+            if(usuarioLogado.admin) {
+                badge.innerText = "Admin";
+                badge.className = "text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-purple-600 text-white";
+            } else {
+                badge.innerText = "Comum";
+                badge.className = "text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-blue-600 text-white";
+            }
+
+            renderizarMenu();
+            abrirAcao('listar');
+        }
+
+        function renderizarMenu() {
+            const menu = document.getElementById('menu-actions');
+            let html = `<button onclick="abrirAcao('listar')" class="p-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-medium text-xs transition">1. Listar</button>`;
+
+            if (usuarioLogado.admin) {
+                html += `
+                    <button onclick="abrirAcao('adicionar')" class="p-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-medium text-xs transition">2. Adicionar</button>
+                    <button onclick="abrirAcao('atualizar')" class="p-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-medium text-xs transition">3. Atualizar</button>
+                    <button onclick="abrirAcao('remover')" class="p-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-medium text-xs transition">4. Remover</button>
+                    <button onclick="abrirAcao('criar_user')" class="p-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-medium text-xs transition">5. Criar User</button>
+                `;
+            }
+
+            html += `
+                <button onclick="abrirAcao('comprar')" class="p-2 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg font-medium text-xs transition flex items-center justify-center gap-1"><i class="fas fa-shopping-cart text-[10px]"></i> Comprar</button>
+                <button onclick="abrirAcao('abrir_jogo')" class="p-2 bg-cyan-700 hover:bg-cyan-600 text-white rounded-lg font-medium text-xs transition flex items-center justify-center gap-1"><i class="fas fa-gamepad text-[10px]"></i> Jogar</button>
+            `;
+            menu.innerHTML = html;
+        }
+
+        function abrirAcao(acao) {
+            pararJogo();
+            const area = document.getElementById('action-area');
+
+            if (acao === 'listar') {
+                area.innerHTML = `<h4 class="text-sm font-bold text-cyan-400 mb-3 uppercase tracking-wider">Produtos Cadastrados</h4>`;
+                db_produtos.forEach(p => {
+                    area.innerHTML += `
+                        <div class="bg-gray-900/60 p-3 rounded-lg mb-2 border-l-4 border-cyan-500 text-sm flex justify-between items-start">
+                            <div>
+                                <strong>ID: ${p.pro_id} | ${p.pro_nome}</strong> <span class="text-xs text-gray-400">(${p.prod_desc})</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-emerald-400 font-bold block">R$ ${p.prod_preco.toFixed(2)}</span>
+                                <span class="text-[11px] text-gray-400">Estoque: ${p.qntd_estoque}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            else if (acao === 'adicionar') {
+                area.innerHTML = `
+                    <h4 class="text-sm font-bold text-purple-400 mb-3 uppercase tracking-wider">Adicionar Novo Produto</h4>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <input id="p-nome" placeholder="Nome do Jogo" class="bg-gray-900 border border-gray-800 p-2 rounded-lg text-white">
+                        <input id="p-preco" type="number" placeholder="Preço (R$)" class="bg-gray-900 border border-gray-800 p-2 rounded-lg text-white">
+                        <input id="p-estoque" type="number" placeholder="Quantidade em Estoque" class="bg-gray-900 border border-gray-800 p-2 rounded-lg text-white">
+                        <input id="p-desc" placeholder="Breve Descrição" class="bg-gray-900 border border-gray-800 p-2 rounded-lg text-white col-span-2">
+                        <button onclick="salvarProdutoNovo()" class="bg-purple-600 hover:bg-purple-500 text-white p-2.5 rounded-lg col-span-2 font-bold text-xs mt-2 transition">Inserir Produto</button>
+                    </div>
+                `;
+            }
+
+            else if (acao === 'criar_user') {
+                area.innerHTML = `
+                    <h4 class="text-sm font-bold text-purple-400 mb-3 uppercase tracking-wider">Cadastrar Novo Usuário</h4>
+                    <div class="space-y-2 text-xs max-w-xs mx-auto">
+                        <input id="u-login" placeholder="Login" class="w-full bg-gray-900 border border-gray-800 p-2 rounded-lg text-white">
+                        <input id="u-senha" type="password" placeholder="Senha" class="w-full bg-gray-900 border border-gray-800 p-2 rounded-lg text-white">
+                        <select id="u-tipo" class="w-full bg-gray-900 border border-gray-800 p-2 rounded-lg text-white">
+                            <option value="2">Usuário Comum</option>
+                            <option value="1">Administrador</option>
+                        </select>
+                        <button onclick="salvarNovoUsuario()" class="w-full bg-purple-600 hover:bg-purple-500 text-white p-2.5 rounded-lg font-bold text-xs transition">Finalizar Cadastro</button>
+                    </div>
+                `;
+            }
+
+            else if (acao === 'comprar') {
+                area.innerHTML = `<h4 class="text-sm font-bold text-emerald-400 mb-3 uppercase tracking-wider">Loja de Jogos</h4>`;
+                db_produtos.filter(p => p.qntd_estoque > 0).forEach(p => {
+                    const jaPossui = db_bibliotecas.some(b => b.usuario_id === usuarioLogado.id && b.produto_id === p.pro_id);
+                    area.innerHTML += `
+                        <div class="flex justify-between items-center bg-gray-900/60 p-3 rounded-lg mb-2 text-sm">
+                            <div>
+                                <strong>${p.pro_nome}</strong>
+                                <p class="text-xs text-gray-400">Disponíveis no estoque: ${p.qntd_estoque}</p>
+                            </div>
+                            <button ${jaPossui ? 'disabled' : ''} onclick="executarCompra(${p.pro_id})" 
+                                class="px-3 py-1.5 rounded-lg font-bold text-xs transition ${jaPossui ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-500 text-white'}">
+                                ${jaPossui ? 'Adquirido' : 'Comprar por R$ ' + p.prod_preco.toFixed(2)}
+                            </button>
+                        </div>
+                    `;
+                });
+            }
+
+            else if (acao === 'abrir_jogo') {
+                area.innerHTML = `<h4 class="text-sm font-bold text-cyan-400 mb-3 uppercase tracking-wider">Sua Biblioteca</h4>`;
+                const meusJogosIds = db_bibliotecas.filter(b => b.usuario_id === usuarioLogado.id).map(b => b.produto_id);
+                const meusJogos = db_produtos.filter(p => meusJogosIds.includes(p.pro_id));
+
+                if(meusJogos.length === 0) {
+                    area.innerHTML += `<p class="text-gray-500 text-center text-xs py-6">Nenhum jogo na sua biblioteca ainda.</p>`;
+                    return;
+                }
+
+                meusJogos.forEach(j => {
+                    area.innerHTML += `
+                        <div class="flex justify-between items-center bg-gray-900/60 p-3 rounded-lg mb-2 text-sm">
+                            <span><i class="fas fa-play-circle text-cyan-400 mr-2"></i><strong>${j.pro_nome}</strong></span>
+                            <button onclick="rodarJogoSimulado('${j.pro_nome}')" class="bg-cyan-600 hover:bg-cyan-500 text-white px-3 py-1.5 rounded-lg font-bold text-xs transition">
+                                Abrir Jogo
+                            </button>
+                        </div>
+                    `;
+                });
+                area.innerHTML += `<div id="jogo-container-ativo" class="mt-4"></div>`;
+            }
+            
+            else {
+                area.innerHTML = `<p class="text-gray-500 text-center text-xs py-6">Módulo em manutenção ou simulado via chamadas CRUD do Backend.</p>`;
+            }
+        }
+
+        function salvarProdutoNovo() {
+            const nome = document.getElementById('p-nome').value;
+            const preco = parseFloat(document.getElementById('p-preco').value);
+            const estoque = parseInt(document.getElementById('p-estoque').value);
+            const desc = document.getElementById('p-desc').value;
+
+            if(!nome || isNaN(preco)) return alert("Preencha os campos corretamente!");
+
+            db_produtos.push({ pro_id: db_produtos.length + 1, pro_nome: nome, prod_desc: desc, prod_preco: preco, qntd_estoque: estoque });
+            abrirAcao('listar');
+        }
+
+        function salvarNovoUsuario() {
+            const login = document.getElementById('u-login').value.trim();
+            const senha = document.getElementById('u-senha').value.trim();
+            const tipo = document.getElementById('u-tipo').value === "1";
+
+            if(!login || !senha) return alert("Preencha login e senha!");
+
+            db_usuarios.push({ id: db_usuarios.length + 1, login, senha, admin: tipo, dinheiro: 1000.00 });
+            alert("Novo usuário adicionado com sucesso!");
+            abrirAcao('listar');
+        }
+
+        function ejecutarCompra(produtoId) {
+            const produto = db_produtos.find(p => p.pro_id === produtoId);
+            
+            if (usuarioLogado.dinheiro < produto.prod_preco) {
+                return alert("Saldo insuficiente em sua conta.");
+            }
+
+            usuarioLogado.dinheiro -= produto.prod_preco;
+            produto.qntd_estoque -= 1;
+            db_bibliotecas.push({ usuario_id: usuarioLogado.id, produto_id: produto.pro_id });
+
+            document.getElementById('header-saldo').innerText = `R$ ${usuarioLogado.dinheiro.toFixed(2)}`;
+            abrirAcao('comprar');
+        }
+
+        function rodarJogoSimulado(nomeJogo) {
+            pararJogo();
+            const container = document.getElementById('jogo-container-ativo');
+            container.innerHTML = `
+                <div class="p-4 bg-gray-950 rounded-xl border border-cyan-500/50 text-xs font-mono space-y-2">
+                    <div class="flex items-center gap-2 text-cyan-400">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 blink"></span>
+                        <p>Executando agora: ${nomeJogo}</p>
+                    </div>
+                    <div id="farm-logs" class="text-gray-400 text-[11px] max-h-32 overflow-y-auto"></div>
+                </div>
+            `;
+
+            let ganhoTotal = 0.0;
+            jogoRodandoInterval = setInterval(() => {
+                ganhoTotal += 10.0;
+                usuarioLogado.dinheiro += 10.0;
+                
+                document.getElementById('header-saldo').innerText = `R$ ${usuarioLogado.dinheiro.toFixed(2)}`;
+                
+                const farmLogs = document.getElementById('farm-logs');
+                if(farmLogs) {
+                    farmLogs.innerHTML += `<p class="text-emerald-500">+ R$ 10,00 adicionados (Ganho total nesta sessão: R$ ${ganhoTotal.toFixed(2)})</p>`;
+                }
+            }, 5000); 
+        }
+
+        function pararJogo() {
+            if(jogoRodandoInterval) {
+                clearInterval(jogoRodandoInterval);
+                jogoRodandoInterval = null;
+            }
+        }
+
+        function logout() {
+            pararJogo();
+            usuarioLogado = null;
+            document.getElementById('user-header').classList.add('hidden');
+            document.getElementById('screen-dashboard').classList.add('hidden');
+            document.getElementById('screen-login').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

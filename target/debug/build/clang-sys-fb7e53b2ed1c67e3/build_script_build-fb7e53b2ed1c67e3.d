@@ -1,0 +1,9 @@
+C:\Users\João Gabriel\OneDrive\Área de Trabalho\Nextage Shop\target\debug\build\clang-sys-fb7e53b2ed1c67e3\build_script_build-fb7e53b2ed1c67e3.d: C:\Users\João\ Gabriel\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\clang-sys-1.8.1\build.rs C:\Users\João\ Gabriel\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\clang-sys-1.8.1\build\macros.rs C:\Users\João\ Gabriel\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\clang-sys-1.8.1\build\common.rs C:\Users\João\ Gabriel\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\clang-sys-1.8.1\build\dynamic.rs C:\Users\João\ Gabriel\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\clang-sys-1.8.1\build\static.rs
+
+C:\Users\João Gabriel\OneDrive\Área de Trabalho\Nextage Shop\target\debug\build\clang-sys-fb7e53b2ed1c67e3\build_script_build-fb7e53b2ed1c67e3.exe: C:\Users\João\ Gabriel\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\clang-sys-1.8.1\build.rs C:\Users\João\ Gabriel\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\clang-sys-1.8.1\build\macros.rs C:\Users\João\ Gabriel\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\clang-sys-1.8.1\build\common.rs C:\Users\João\ Gabriel\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\clang-sys-1.8.1\build\dynamic.rs C:\Users\João\ Gabriel\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\clang-sys-1.8.1\build\static.rs
+
+C:\Users\João\ Gabriel\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\clang-sys-1.8.1\build.rs:
+C:\Users\João\ Gabriel\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\clang-sys-1.8.1\build\macros.rs:
+C:\Users\João\ Gabriel\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\clang-sys-1.8.1\build\common.rs:
+C:\Users\João\ Gabriel\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\clang-sys-1.8.1\build\dynamic.rs:
+C:\Users\João\ Gabriel\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\clang-sys-1.8.1\build\static.rs:
