@@ -15,9 +15,7 @@
 </head>
 <body class="p-6 font-sans antialiased">
 
-    <!-- HEADER PRINCIPAL DO SISTEMA (FIXO NO TOPO) -->
     <header class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center border-b border-gray-700 pb-4 mb-6 gap-4">
-        <!-- TÍTULO DO SISTEMA -->
         <div>
             <h1 class="text-3xl font-extrabold tracking-wider bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
                 NEXTAGE SHOP
@@ -25,7 +23,6 @@
             <p class="text-xs text-gray-400 mt-0.5">Gerenciador de Jogos & Sistema de Créditos</p>
         </div>
 
-        <!-- SEÇÃO DO USUÁRIO + FOTO (SÓ APARECE APÓS LOGIN) -->
         <div id="user-header" class="hidden flex items-center gap-4 bg-gray-900/40 px-4 py-2 rounded-xl border border-gray-800">
             <div class="text-right">
                 <div class="flex items-center gap-2 justify-end">
@@ -35,7 +32,6 @@
                 <p class="text-xs text-emerald-400 font-bold mt-0.5" id="header-saldo">R$ 0,00</p>
             </div>
             
-            <!-- CONTÊINER DA SUA FOTO DE PERFIL -->
             <div class="w-10 h-10 rounded-full border-2 border-purple-500 overflow-hidden bg-gray-800 flex items-center justify-center shadow-lg">
                 <img id="user-avatar" src="8e932ac5-3128-4ed4-9912-4f856bac47bf.webp" alt="Avatar" class="w-full h-full object-cover">
             </div>
@@ -46,12 +42,10 @@
         </div>
     </header>
 
-    <!-- ÁREA DE CONTEÚDO PRINCIPAL (CENTRALIZADA) -->
     <main class="max-w-4xl mx-auto panel p-6 rounded-2xl shadow-2xl relative min-h-[450px] flex flex-col justify-center">
         
         <div id="screen-container" class="w-full">
             
-            <!-- PASSO 1: CRIAR PRIMEIRO USUÁRIO (Mestre) -->
             <div id="screen-setup" class="space-y-4 max-w-md mx-auto w-full">
                 <h3 class="text-xl font-bold text-center text-white"><i class="fas fa-shield-alt text-yellow-500 mr-2"></i>Primeiro Acesso</h3>
                 <p class="text-xs text-gray-400 text-center">Nenhum usuário encontrado no banco de dados. Digite a senha mestra para começar.</p>
@@ -63,7 +57,6 @@
                 </button>
             </div>
 
-            <!-- PASSO 1.5: CADASTRO DO ADMIN -->
             <div id="screen-register-admin" class="hidden space-y-4 max-w-md mx-auto w-full">
                 <h3 class="text-xl font-bold text-center text-white">Definir Conta Administradora</h3>
                 <div class="space-y-2">
@@ -75,7 +68,6 @@
                 </button>
             </div>
 
-            <!-- PASSO 2: LOGIN -->
             <div id="screen-login" class="hidden space-y-4 max-w-md mx-auto w-full">
                 <h3 class="text-xl font-bold text-center text-white"><i class="fas fa-lock mr-2 text-cyan-400"></i>Acessar sua Conta</h3>
                 <div class="space-y-2">
@@ -87,16 +79,11 @@
                 </button>
             </div>
 
-            <!-- PASSO 3: DASHBOARD PRINCIPAL -->
             <div id="screen-dashboard" class="hidden space-y-6">
-                <!-- Menu de Ações Superior Interno -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2" id="menu-actions">
-                    <!-- Botões injetados dinamicamente via JS -->
                 </div>
 
-                <!-- Painel de Exibição Dinâmico -->
                 <div id="action-area" class="bg-gray-950/40 border border-gray-800/80 rounded-xl p-5 min-h-[250px]">
-                    <!-- Telas renderizadas dinamicamente -->
                 </div>
             </div>
 
@@ -104,7 +91,6 @@
     </main>
 
     <script>
-        // Banco Fictício Local
         let db_usuarios = [];
         let db_produtos = [
             { pro_id: 1, pro_nome: "Cyberpunk 2077", prod_desc: "RPG de ação futurista em Night City.", prod_preco: 199.90, qntd_estoque: 4 },
@@ -115,7 +101,6 @@
         let usuarioLogado = null;
         let jogoRodandoInterval = null;
 
-        // Fluxo Inicial de Segurança
         function verificarSenhaMestra() {
             const senha = document.getElementById('setup-master').value;
             if (senha === "Un1f3c@f") {
