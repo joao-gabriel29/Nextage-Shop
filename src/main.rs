@@ -70,7 +70,6 @@ fn conectar_banco() -> PooledConn {
         }
     };
     
-    // CORREÇÃO: Pegar a conexão de dentro do pool e retornar
     match pool.get_conn() {
         Ok(c) => c,
         Err(e) => {
@@ -324,7 +323,6 @@ fn abrir_jogo_cli(conn: &mut PooledConn, usuario_id: u32) {
         ganho_total += ganho_por_intervalo;
         atualizar_saldo(conn, usuario_id, ganho_por_intervalo);
         
-        // CORREÇÃO: Buscar o saldo atualizado direto do banco para evitar dessincronização
         let saldo_atual = obter_saldo(conn, usuario_id).unwrap_or(0.0);
         println!("[{}] Ganho total: R${:.2} | Saldo atual: R${:.2}", nome_jogo, ganho_total, saldo_atual);
     }
